@@ -4,9 +4,18 @@ export async function remoteValue(promise) {
   return result.value;
 }
 
-export async function retainDocumentSession(ctx, document) {
-  const reference = ctx.sessions.retain(document.sessionId, { source: 'mdReader' });
-  try { await reference.ready; return reference; }
+export async function retainDocumentSession(ctx, document, signal) {
+  signal?.throwIfAborted();
+  if (!ctx.sessions.list.getSnapshot().byId[document.sessionId]) await ctx.sessions.refresh();
+  signal?.throwIfAborted();
+  const reference = ctx.sessions.retain(document.sessionId, { source: 'mdReader', signal });
+  try {
+    await reference.ready;
+    signal?.throwIfAborted();
+    const state = reference.binding.session.getSnapshot();
+    if (state.openState === 'error') throw new Error(state.openError?.message || 'DSH 会话历史加载失败，请重新打开文档。');
+    return reference;
+  }
   catch (error) { reference.release(); throw error; }
 }
 

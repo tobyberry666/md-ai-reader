@@ -22,3 +22,8 @@ test('quote label is compact, original quote remains untouched', () => {
   assert.ok(quoteLabel(quote).length <= 65);
   assert.equal(quote.endsWith('long'), true);
 });
+
+test('backtick-dense documents below the import limit do not overflow the call stack', () => {
+  const text = '` x '.repeat(150000) + 'END_DENSE';
+  assert.ok(makeDocumentContext({ name: 'dense.md', text }).includes(text));
+});

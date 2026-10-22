@@ -1,4 +1,5 @@
 import { readerSelection, searchRanges } from './selection.js';
+import { markdownImageUrl } from './paths.js';
 
 const markdownLabels = {
   code: { copyLabel: '复制', copiedLabel: '已复制', toolbarLabels: { codeLabel: '代码', wrapLabel: '换行', unwrapLabel: '不换行' } },
@@ -19,8 +20,10 @@ export function Reader({ document: doc, onQuote, onPosition }) {
   const [matches, setMatches] = React.useState([]);
   const [fontSize, setFontSize] = React.useState(16);
   const position = React.useRef(doc.scrollTop || 0);
+  const saveTimer = React.useRef(null);
   const save = React.useRef(onPosition);
   save.current = onPosition;
+  const pathImages = React.useMemo(() => ({ resolve: destination => markdownImageUrl(window.document.baseURI, doc.sourcePath, destination) }), [doc.sourcePath]);
 
   React.useEffect(() => {
     const refresh = () => {
@@ -31,7 +34,7 @@ export function Reader({ document: doc, onQuote, onPosition }) {
     const observer = new MutationObserver(refresh);
     observer.observe(body.current, { childList: true, subtree: true });
     const timer = setTimeout(() => { scroller.current.scrollTop = position.current; }, 0);
-    return () => { observer.disconnect(); clearTimeout(timer); save.current(position.current); };
+    return () => { observer.disconnect(); clearTimeout(timer); clearTimeout(saveTimer.current); save.current(position.current); };
   }, []);
 
   React.useEffect(() => {
@@ -92,9 +95,13 @@ export function Reader({ document: doc, onQuote, onPosition }) {
     showToc && h('nav', { className: 'mdr-toc', 'aria-label': '文档目录' },
       h('div', { className: 'mdr-overline' }, '本页目录'),
       toc.length ? toc.map(item => h('button', { key: item.index, style: { paddingLeft: `${12 + Math.max(0, item.level - 1) * 12}px` }, onClick: () => item.element.scrollIntoView({ block: 'start', behavior: 'instant' }), title: item.text }, item.text)) : h('span', { className: 'mdr-muted' }, '暂无标题')),
-    h('div', { ref: scroller, className: 'mdr-page-scroll', onScroll: event => { position.current = event.currentTarget.scrollTop; setSelection(null); } },
+    h('div', { ref: scroller, className: 'mdr-page-scroll', onScroll: event => {
+      position.current = event.currentTarget.scrollTop; setSelection(null);
+      clearTimeout(saveTimer.current);
+      saveTimer.current = setTimeout(() => save.current(position.current), 350);
+    } },
       h('article', { ref: body, className: 'mdr-prose', style: { '--mdr-font-size': `${fontSize}px` }, 'data-reader-body': true },
-        h(MarkdownText, { text: doc.text, streaming: false, labels: markdownLabels })),
+        h(MarkdownText, { text: doc.text, streaming: false, labels: markdownLabels, pathImages })),
       h('footer', { className: 'mdr-page-end' }, h('span', null, '—'), ' 文档结束 ', h('span', null, '—')))),
   selection && h('button', {
     ref: toolbar, className: 'mdr-quote-action',

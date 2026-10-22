@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import vm from 'node:vm';
 
-const modules = ['documents', 'context', 'remote', 'selection', 'bridge', 'reader', 'client'];
+const modules = ['documents', 'context', 'remote', 'selection', 'paths', 'bridge', 'reader', 'client'];
 const css = await readFile(new URL('../src/styles.css', import.meta.url), 'utf8');
 const sources = await Promise.all(modules.map(async name => (await readFile(new URL(`../src/${name}.js`, import.meta.url), 'utf8')).replace(/^import .*;\r?\n/gm, '').replace(/^export /gm, '')));
 const source = `window.__ModuleLoader__.load({id:"dsh-md-reader",factory:function(require){\n"use strict";\nconst React=require("react");\nconst {MarkdownText}=require("@deepseek-ai/dsh-client-ui-primitives");\nconst READER_CSS=${JSON.stringify(css)};\n${sources.join('\n')}\nreturn {apply,inject};\n}});\n`;

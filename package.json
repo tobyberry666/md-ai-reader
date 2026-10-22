@@ -1,12 +1,43 @@
 {
   "name": "dsh-md-reader",
-  "version": "0.1.0",
+  "version": "0.1.6",
   "description": "在 DeepSeek Harness 内阅读 Markdown，并使用独立的原生 AI 会话提问",
   "type": "module",
   "main": "./src/index.js",
-  "exports": { ".": "./src/index.js", "./client": "./lib/client.js", "./package.json": "./package.json" },
-  "files": ["src", "lib/client.js", "cordis.patch.yml", "README.md"],
-  "scripts": { "build": "node scripts/build.mjs", "test": "node --test test/*.test.mjs", "test:browser": "node test/browser.mjs", "prepack": "npm run build" },
-  "engines": { "node": ">=24" },
-  "dsh": { "bundle": { "patch": "./cordis.patch.yml" }, "client": { "platform": "web", "immediately": true, "inject": ["@deepseek-ai/dsh-client-ui-conversation", "@deepseek-ai/dsh-client-ui-chat", "@deepseek-ai/dsh-client-ui-session", "@deepseek-ai/dsh-client-ui-layout"] } }
+  "exports": {
+    ".": "./src/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "lib/client.js",
+    "cordis.patch.yml",
+    "docs/contracts.md",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/*.test.mjs",
+    "test:browser": "node test/browser.mjs",
+    "prepack": "npm run build"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-chat",
+        "@deepseek-ai/dsh-client-ui-session",
+        "@deepseek-ai/dsh-client-ui-layout"
+      ]
+    }
+  }
 }

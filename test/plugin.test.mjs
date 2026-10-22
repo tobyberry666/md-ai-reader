@@ -9,6 +9,7 @@ test('client registers a separate page and session-scoped native chat, then clea
   let plugin;
   const React = { createElement: (...args) => args };
   const ctx = {
+    inject(keys, callback) { assert.deepEqual(Array.from(keys), ['remote.mdReader']); callback(this); },
     slots: {
       inject(_key, callback) {
         const result = callback();
