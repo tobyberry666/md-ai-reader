@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="740" viewBox="0 0 1200 740" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">md-ai-reader — 读到哪里，问到哪里。</title>
+  <desc id="desc">DSH Markdown 阅读插件功能示意，左侧文档阅读，右侧引用选区并结合全文回答。</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1200" y2="740" gradientUnits="userSpaceOnUse"><stop stop-color="#f8f5ef"/><stop offset="1" stop-color="#ebe6db"/></linearGradient>
+    <filter id="shadow" x="-10%" y="-15%" width="120%" height="140%"><feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#40372c" flood-opacity=".1"/></filter>
+  </defs>
+  <rect width="1200" height="740" rx="24" fill="url(#paper)"/>
+  <circle cx="1120" cy="55" r="195" stroke="#d6c5b0" stroke-opacity=".5"/>
+  <circle cx="1120" cy="55" r="143" stroke="#d6c5b0" stroke-opacity=".5"/>
+  <g font-family="Inter,Segoe UI,Microsoft YaHei,sans-serif">
+    <rect x="52" y="42" width="216" height="30" rx="15" fill="#e8ded0"/>
+    <circle cx="69" cy="57" r="4" fill="#9b6048"/>
+    <text x="81" y="62" fill="#6e5c4a" font-size="10" font-weight="600" letter-spacing="1.4">DEEPSEEK HARNESS PLUGIN</text>
+    <text x="49" y="155" fill="#292b26" font-size="78" font-weight="750" letter-spacing="-4">md-ai-reader<tspan fill="#ae624b">.</tspan></text>
+    <text x="54" y="210" fill="#564d42" font-size="28" font-weight="500">读到哪里，问到哪里。</text>
+    <text x="54" y="246" fill="#8c8275" font-size="15">舒服地读 Markdown，让 AI 结合整篇文档回答。</text>
+    <g transform="translate(946 155)" stroke="#ae624b" stroke-width="2.5" stroke-linejoin="round">
+      <path d="M0 0h26a14 14 0 0 1 14 14v55a17 17 0 0 0-16-8H0V0Z" fill="#f5eee4"/>
+      <path d="M80 0H54a14 14 0 0 0-14 14v55a17 17 0 0 1 16-8h24V0Z" fill="#f5eee4"/>
+      <path d="m101-18 4 12 12 4-12 4-4 12-4-12-12-4 12-4 4-12Z" fill="#ae624b" stroke="none"/>
+    </g>
+    <g filter="url(#shadow)">
+      <rect x="52" y="286" width="1096" height="356" rx="14" fill="#fffdfa" stroke="#d9d2c6"/>
+      <path d="M52 300a14 14 0 0 1 14-14h1068a14 14 0 0 1 14 14v30H52v-30Z" fill="#f2eee7"/>
+      <circle cx="73" cy="308" r="4" fill="#c5b2a0"/><circle cx="87" cy="308" r="4" fill="#d2c4b4"/><circle cx="101" cy="308" r="4" fill="#ded5c8"/>
+      <text x="128" y="313" fill="#5e584d" font-size="12" font-weight="600">MD 阅读</text>
+      <rect x="209" y="296" width="135" height="24" rx="5" fill="#fffdfa"/>
+      <text x="223" y="312" fill="#7d7467" font-size="11">physical-layer.md</text>
+      <path d="M707 330v312M204 330v312M52 330h1096" stroke="#e5dfd4"/>
+      <text x="75" y="364" fill="#a49a8b" font-size="10" letter-spacing="1.2">本页目录</text>
+      <text x="75" y="399" fill="#6b6255" font-size="11">信号与传输介质</text>
+      <text x="75" y="432" fill="#a49a8b" font-size="11">三个易混淆的量</text>
+      <text x="75" y="465" fill="#a49a8b" font-size="11">实验记录</text>
+      <rect x="68" y="483" width="121" height="30" rx="5" fill="#f2e8de"/>
+      <text x="79" y="502" fill="#a7644d" font-size="11">末尾校验</text>
+      <text x="239" y="378" fill="#32352e" font-size="23" font-weight="700">物理层 · 阅读笔记</text>
+      <text x="239" y="411" fill="#8f8679" font-size="11">专注阅读，随时提问。</text>
+      <text x="239" y="455" fill="#4a4b43" font-size="14">光纤使用光信号传输数据；双绞线使用电信号。</text>
+      <rect x="235" y="469" width="382" height="27" rx="3" fill="#ead4ba"/>
+      <text x="239" y="488" fill="#4a4b43" font-size="14">传输介质的类型不等于具体接口的速率。</text>
+      <text x="239" y="523" fill="#4a4b43" font-size="14">解释实验时，需要结合后面的设备表格。</text>
+      <rect x="490" y="498" width="80" height="31" rx="7" fill="#30382e"/>
+      <text x="507" y="518" fill="#fffdfa" font-size="12">✦ 提问</text>
+      <path d="M239 554h417" stroke="#e5dfd4"/>
+      <text x="239" y="586" fill="#32352e" font-size="16" font-weight="600">实验记录</text>
+      <text x="239" y="614" fill="#8f8679" font-size="12">设备 A · 光纤 · 7.3 Gbit/s</text>
+      <text x="731" y="360" fill="#4f5148" font-size="12" font-weight="600">✦ 与文档对话</text>
+      <circle cx="1041" cy="356" r="3" fill="#819476"/>
+      <text x="1052" y="360" fill="#8d9682" font-size="10">全文已接入</text>
+      <rect x="780" y="384" width="340" height="83" rx="10" fill="#f0ede6"/>
+      <path d="M795 397v20" stroke="#c49b7e" stroke-width="2"/>
+      <text x="806" y="411" fill="#9d8c79" font-size="10">引用：传输介质的类型不等于接口速率…</text>
+      <text x="796" y="443" fill="#4f5148" font-size="13">结合全文，设备 A 的接口速率是多少？</text>
+      <text x="735" y="501" fill="#9c7d66" font-size="11">✦ 已结合文档全文</text>
+      <text x="735" y="530" fill="#343b30" font-size="14">设备 A 的接口速率为 <tspan font-weight="700">7.3 Gbit/s</tspan>。</text>
+      <text x="735" y="555" fill="#8f8679" font-size="12">来源：「实验记录」中的设备 A 行。</text>
+      <rect x="729" y="579" width="397" height="42" rx="9" stroke="#e2d9ca"/>
+      <text x="745" y="605" fill="#a79d90" font-size="12">接着问，或选中另一段文字…</text>
+      <rect x="1085" y="588" width="25" height="25" rx="7" fill="#ae624b"/>
+      <path d="m1093 601 5-5 5 5m-5-4v10" stroke="#fffdfa" stroke-width="1.5"/>
+    </g>
+    <text x="55" y="691" fill="#746b5e" font-size="12" letter-spacing=".6">全文上下文</text>
+    <circle cx="172" cy="687" r="2" fill="#b5a58d"/>
+    <text x="197" y="691" fill="#746b5e" font-size="12" letter-spacing=".6">独立原生会话</text>
+    <circle cx="339" cy="687" r="2" fill="#b5a58d"/>
+    <text x="364" y="691" fill="#746b5e" font-size="12" letter-spacing=".6">claude-style 适配</text>
+    <text x="1090" y="691" text-anchor="end" fill="#a4937b" font-size="11" letter-spacing="2">READ. SELECT. ASK.</text>
+  </g>
+</svg>

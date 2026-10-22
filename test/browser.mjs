@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
-const { chromium } = require('../../vc-expo-intelligence/node_modules/playwright');
+const { chromium } = require('playwright');
 const browser = await chromium.connectOverCDP(process.env.DSH_CDP || 'http://127.0.0.1:9237');
 try {
   const page = browser.contexts().flatMap(context => context.pages()).find(p => p.url().startsWith('dsh-app://app/'));

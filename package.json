@@ -1,7 +1,13 @@
 {
   "name": "dsh-md-reader",
   "version": "0.1.6",
-  "description": "在 DeepSeek Harness 内阅读 Markdown，并使用独立的原生 AI 会话提问",
+  "description": "md-ai-reader · 读到哪里，问到哪里。DSH Markdown 阅读与全文 AI 问答插件",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tobyberry666/md-ai-reader.git"
+  },
+  "homepage": "https://github.com/tobyberry666/md-ai-reader#readme",
+  "keywords": ["deepseek-harness", "markdown", "reader", "ai", "dsh-plugin"],
   "type": "module",
   "main": "./src/index.js",
   "exports": {
@@ -14,6 +20,7 @@
     "lib/client.js",
     "cordis.patch.yml",
     "docs/contracts.md",
+    "docs/assets/hero.svg",
     "README.md"
   ],
   "scripts": {

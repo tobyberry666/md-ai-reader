@@ -3,7 +3,7 @@ import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { mkdir, readFile } from 'node:fs/promises';
 const require = createRequire(import.meta.url);
-const { chromium } = require('../../vc-expo-intelligence/node_modules/playwright');
+const { chromium } = require('playwright');
 const browser = await chromium.connectOverCDP(process.env.DSH_CDP || 'http://127.0.0.1:9237');
 const results = [];
 try {

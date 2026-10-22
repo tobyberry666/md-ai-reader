@@ -2,7 +2,7 @@
 import { openSync, readSync, closeSync, mkdirSync, writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 
-const archive = process.env.DSH_ASAR || 'C:/Users/Toby/AppData/Local/Programs/DeepSeek Harness/resources/app.asar';
+const archive = process.env.DSH_ASAR || resolve(process.env.LOCALAPPDATA || '.', 'Programs/DeepSeek Harness/resources/app.asar');
 const fd = openSync(archive, 'r');
 const prefix = Buffer.alloc(16);
 readSync(fd, prefix, 0, 16, 0);
