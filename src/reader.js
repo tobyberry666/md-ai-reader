@@ -11,7 +11,9 @@ export function Reader({ document: doc, onQuote, onPosition }) {
   const scroller = React.useRef(null);
   const toolbar = React.useRef(null);
   const searchInput = React.useRef(null);
+  const tocContainer = React.useRef(null);
   const [toc, setToc] = React.useState([]);
+  const [activeHeading, setActiveHeading] = React.useState(null);
   const [showToc, setShowToc] = React.useState(true);
   const [selection, setSelection] = React.useState(null);
   const [query, setQuery] = React.useState('');
@@ -21,6 +23,7 @@ export function Reader({ document: doc, onQuote, onPosition }) {
   const [fontSize, setFontSize] = React.useState(16);
   const position = React.useRef(doc.scrollTop || 0);
   const saveTimer = React.useRef(null);
+  const tocIdleTimer = React.useRef(null);
   const save = React.useRef(onPosition);
   save.current = onPosition;
   const pathImages = React.useMemo(() => ({ resolve: destination => markdownImageUrl(window.document.baseURI, doc.sourcePath, destination) }), [doc.sourcePath]);
@@ -34,8 +37,19 @@ export function Reader({ document: doc, onQuote, onPosition }) {
     const observer = new MutationObserver(refresh);
     observer.observe(body.current, { childList: true, subtree: true });
     const timer = setTimeout(() => { scroller.current.scrollTop = position.current; }, 0);
-    return () => { observer.disconnect(); clearTimeout(timer); clearTimeout(saveTimer.current); save.current(position.current); };
+    return () => { observer.disconnect(); clearTimeout(timer); clearTimeout(saveTimer.current); clearTimeout(tocIdleTimer.current); save.current(position.current); };
   }, []);
+
+  const revealCurrentHeading = () => {
+    const nav = tocContainer.current;
+    const item = nav?.querySelector('[aria-current="location"]');
+    if (!item || !nav.clientHeight) return;
+    const frame = nav.getBoundingClientRect();
+    const box = item.getBoundingClientRect();
+    if (box.top < frame.top) nav.scrollTop += box.top - frame.top;
+    else if (box.bottom > frame.bottom) nav.scrollTop += box.bottom - frame.bottom;
+  };
+  React.useEffect(revealCurrentHeading, [activeHeading, showToc]);
 
   React.useEffect(() => {
     const changed = () => {
@@ -92,11 +106,24 @@ export function Reader({ document: doc, onQuote, onPosition }) {
     h('button', { onClick: () => move(-1), 'aria-label': '上一处匹配' }, '↑'), h('button', { onClick: () => move(1), 'aria-label': '下一处匹配' }, '↓'),
     h('button', { onClick: () => { setSearchOpen(false); setQuery(''); }, 'aria-label': '关闭搜索' }, '×')),
   h('div', { className: 'mdr-reading-layout' },
-    showToc && h('nav', { className: 'mdr-toc', 'aria-label': '文档目录' },
+    showToc && h('nav', { ref: tocContainer, className: 'mdr-toc', 'aria-label': '文档目录' },
       h('div', { className: 'mdr-overline' }, '本页目录'),
-      toc.length ? toc.map(item => h('button', { key: item.index, style: { paddingLeft: `${12 + Math.max(0, item.level - 1) * 12}px` }, onClick: () => item.element.scrollIntoView({ block: 'start', behavior: 'instant' }), title: item.text }, item.text)) : h('span', { className: 'mdr-muted' }, '暂无标题')),
+      toc.length ? toc.map(item => h('button', { key: item.index, 'aria-current': activeHeading === item.index ? 'location' : undefined, style: { paddingLeft: `${12 + Math.max(0, item.level - 1) * 12}px` }, onClick: () => item.element.scrollIntoView({ block: 'start', behavior: 'instant' }), title: item.text }, item.text)) : h('span', { className: 'mdr-muted' }, '暂无标题')),
     h('div', { ref: scroller, className: 'mdr-page-scroll', onScroll: event => {
       position.current = event.currentTarget.scrollTop; setSelection(null);
+      const viewport = event.currentTarget;
+      // Match the heading's 24px scroll margin, allowing subpixel rounding.
+      const readingLine = viewport.getBoundingClientRect().top + 24;
+      let current = toc[0]?.index ?? null;
+      for (const item of toc) {
+        if (item.element.getBoundingClientRect().top > readingLine + 1) break;
+        current = item.index;
+      }
+      if (viewport.scrollTop > 0 && viewport.scrollTop + viewport.clientHeight >= viewport.scrollHeight - 1) current = toc.at(-1)?.index ?? null;
+      setActiveHeading(current);
+      if (current === activeHeading) revealCurrentHeading();
+      clearTimeout(tocIdleTimer.current);
+      tocIdleTimer.current = setTimeout(() => setActiveHeading(null), 1000);
       clearTimeout(saveTimer.current);
       saveTimer.current = setTimeout(() => save.current(position.current), 350);
     } },

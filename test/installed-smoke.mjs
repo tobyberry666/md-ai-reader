@@ -59,6 +59,13 @@ try {
   await page.getByRole('button', { name: '关闭搜索' }).click();
   results.push('full-text search navigation');
 
+  await page.getByRole('navigation', { name: '文档目录' }).getByRole('button', { name: '三个容易混淆的量', exact: true }).click();
+  const currentHeading = page.locator('.mdr-toc button[aria-current="location"]');
+  await currentHeading.filter({ hasText: '三个容易混淆的量' }).waitFor();
+  assert.equal(await currentHeading.evaluate(element => getComputedStyle(element).fontWeight), '700');
+  await currentHeading.waitFor({ state: 'hidden', timeout: 1500 });
+  results.push('installed native Markdown scroll marks the current TOC entry, then clears after 1s idle');
+
   await page.getByRole('navigation', { name: '文档目录' }).getByRole('button', { name: '末尾校验', exact: true }).click();
   await page.waitForFunction(() => document.querySelector('.mdr-page-scroll').scrollTop > 100);
   const top = await page.locator('.mdr-page-scroll').evaluate(element => element.scrollTop);

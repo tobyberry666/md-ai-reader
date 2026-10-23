@@ -30,6 +30,12 @@ The narrow composer wraps its controls and lets the row grow. Claude's overlaid 
 
 Test sessions contain authored synthetic facts only. Model calls are deliberately manual verification, never part of `npm test`. Screenshots are stored locally under ignored `test-results/`. Existing unrelated font-resource 404s and a pre-existing incompatible vision plugin were not modified. A transient desktop-host `ERR_NETWORK_IO_SUSPENDED` during a test-instance restart cleared on restart; it occurred before the reader loaded.
 
+## 0.1.7: transient TOC follow (2026-10-23)
+
+Body scrolling marks the current heading with `aria-current="location"` and changes only that TOC entry's text color/weight. The TOC adjusts its own scroll position only when the marked entry is outside its viewport; this also works when body scrolling continues within the same section after manually moving the TOC. One second without a body scroll clears the indication. Pending timers are cleaned up on document unmount.
+
+`test/reader-scroll.mjs` mounts the actual Reader in React with a long synthetic heading fixture and checks real browser layout: forward/backward follow, manually displaced TOC, unchanged body position, short final section, timer reset, original style restoration, directory links, hide/show and unmount. This optional check uses Playwright, webpack, React and React DOM; it does not start DSH or call a model. The installed DSH smoke check now contains 9 groups, including native Markdown TOC tracking and idle clearing. All 16 existing unit tests and the native-control layout checks also pass.
+
 ## Limits
 
 UTF-8 `.md`/`.markdown`, maximum 2 MiB per file. Imported documents are immutable snapshots; reimport changed content to start its own session. Local images require the original source path and image file to remain available. Closing a tab preserves the document library and session history. DSH extensions and runtime changes beyond the versions above are not exhaustively tested.
