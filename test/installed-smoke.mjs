@@ -63,8 +63,13 @@ try {
   const currentHeading = page.locator('.mdr-toc button[aria-current="location"]');
   await currentHeading.filter({ hasText: '三个容易混淆的量' }).waitFor();
   assert.equal(await currentHeading.evaluate(element => getComputedStyle(element).fontWeight), '700');
+  const marker = page.locator('.mdr-toc-marker');
+  await marker.waitFor();
+  assert.notEqual(await marker.evaluate(element => getComputedStyle(element).boxShadow), 'none');
+  assert.ok(await marker.evaluate(element => getComputedStyle(element).transitionDuration.split(',').some(time => parseFloat(time) > 0)));
   await currentHeading.waitFor({ state: 'hidden', timeout: 1500 });
-  results.push('installed native Markdown scroll marks the current TOC entry, then clears after 1s idle');
+  await page.waitForFunction(() => getComputedStyle(document.querySelector('.mdr-toc-marker')).opacity === '0', undefined, { timeout: 1000 });
+  results.push('installed native TOC has animated shadow marker and fades after 1s idle');
 
   await page.getByRole('navigation', { name: '文档目录' }).getByRole('button', { name: '末尾校验', exact: true }).click();
   await page.waitForFunction(() => document.querySelector('.mdr-page-scroll').scrollTop > 100);

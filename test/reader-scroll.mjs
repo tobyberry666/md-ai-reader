@@ -55,16 +55,31 @@ try {
     await active.filter({ hasText: new RegExp(`^${name}$`) }).waitFor({ timeout: 2000 });
   };
   const assertRevealed = async () => {
+    await page.waitForFunction(() => {
+      const button = document.querySelector('.mdr-toc button[aria-current="location"]');
+      if (!button) return false;
+      const box = button.getBoundingClientRect(), frame = button.closest('nav').getBoundingClientRect();
+      return box.top >= frame.top - 1 && box.bottom <= frame.bottom + 1;
+    }, undefined, { timeout: 900 });
     const visible = await active.evaluate(button => {
       const nav = button.closest('nav');
       const item = button.getBoundingClientRect(), frame = nav.getBoundingClientRect();
       return { top: item.top, bottom: item.bottom, frameTop: frame.top, frameBottom: frame.bottom, scrollTop: nav.scrollTop };
     });
     assert.ok(visible.top >= visible.frameTop - 1 && visible.bottom <= visible.frameBottom + 1, `active entry must be revealed within its own TOC: ${JSON.stringify(visible)}`);
+    await page.waitForFunction(() => {
+      const item = document.querySelector('.mdr-toc button[aria-current="location"]')?.getBoundingClientRect();
+      const box = document.querySelector('.mdr-toc-marker')?.getBoundingClientRect();
+      return item && box && Math.abs(item.top - box.top) < 1 && Math.abs(item.height - box.height) < 1;
+    }, undefined, { timeout: 900 });
   };
   assert.equal(await active.count(), 0, 'idle initial reader has no indication');
   const normalWeight = await page.getByRole('button', { name: '第1节', exact: true }).evaluate(element => getComputedStyle(element).fontWeight);
   await scrollTo('第20节');
+  const marker = page.locator('.mdr-toc-marker');
+  assert.equal(await marker.count(), 1, 'show a single shared moving shadow marker');
+  assert.notEqual(await marker.evaluate(element => getComputedStyle(element).boxShadow), 'none');
+  assert.ok(await marker.evaluate(element => getComputedStyle(element).transitionDuration.split(',').some(time => parseFloat(time) > 0)), 'marker must animate instead of snapping');
   assert.equal(await active.innerText({ timeout: 1500 }), '第20节');
   assert.equal(await active.evaluate(element => getComputedStyle(element).fontWeight), '700');
   await assertRevealed();
@@ -80,6 +95,7 @@ try {
   await assertRevealed();
 
   await scrollTo('第1节');
+  assert.ok(await marker.evaluate(element => element.getAnimations().some(animation => animation.transitionProperty === 'transform')), 'section changes animate the same marker between entries');
   assert.equal(await active.innerText(), '第1节');
   await assertRevealed();
   const upTop = await page.locator('.mdr-toc').evaluate(element => element.scrollTop);
@@ -90,7 +106,13 @@ try {
   assert.equal(await active.count(), 1, 'another body scroll must reset the idle delay');
   await active.waitFor({ state: 'hidden', timeout: 1500 });
   assert.equal(await active.count(), 0, 'clear indication one second after the last body scroll');
+  assert.equal(await marker.getAttribute('data-visible'), 'false');
+  await page.waitForFunction(() => getComputedStyle(document.querySelector('.mdr-toc-marker')).opacity === '0', undefined, { timeout: 1000 });
   assert.equal(await page.getByRole('button', { name: '第1节', exact: true }).evaluate(element => getComputedStyle(element).fontWeight), normalWeight, 'restore the original text style when idle');
+  await page.getByRole('button', { name: '切换目录', exact: true }).click();
+  await page.getByRole('button', { name: '切换目录', exact: true }).click();
+  await page.waitForTimeout(60);
+  assert.equal(await marker.evaluate(element => getComputedStyle(element).opacity), '0', 'reopening an idle TOC must not flash the old marker');
 
   await page.locator('.mdr-page-scroll').evaluate(element => { element.scrollTop = element.scrollHeight; });
   await active.filter({ hasText: /^第32节$/ }).waitFor();
@@ -111,6 +133,10 @@ try {
   assert.equal(await active.innerText(), '第16节');
   await assertRevealed();
   await page.screenshot({ path: `${output}/following.png` });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await scrollTo('第8节');
+  await assertRevealed();
+  assert.ok(await marker.evaluate(element => getComputedStyle(element).transitionDuration.split(',').every(time => parseFloat(time) === 0)), 'reduced-motion preference disables marker animations');
   await page.evaluate(() => unmountReader());
   await page.waitForTimeout(1100);
   assert.ok(await page.evaluate(() => saved.length > 0));

@@ -36,6 +36,10 @@ Body scrolling marks the current heading with `aria-current="location"` and chan
 
 `test/reader-scroll.mjs` mounts the actual Reader in React with a long synthetic heading fixture and checks real browser layout: forward/backward follow, manually displaced TOC, unchanged body position, short final section, timer reset, original style restoration, directory links, hide/show and unmount. This optional check uses Playwright, webpack, React and React DOM; it does not start DSH or call a model. The installed DSH smoke check now contains 9 groups, including native Markdown TOC tracking and idle clearing. All 16 existing unit tests and the native-control layout checks also pass.
 
+## 0.1.8: TOC motion and shadow interaction
+
+A single decorative marker sits behind the TOC buttons and animates its transform/height between active headings. The marker adds a soft shadow and an accent edge, fades in/out through CSS, and cannot intercept pointer input. The TOC reveals headings with native smooth scrolling; reduced-motion uses instant scrolling and disables transitions. Existing heading detection, the 1000ms idle delay, document position and native AI session bindings are preserved. Browser checks also verify marker alignment, transform transitions, idle reopening without a flash, and reduced-motion behavior.
+
 ## Limits
 
 UTF-8 `.md`/`.markdown`, maximum 2 MiB per file. Imported documents are immutable snapshots; reimport changed content to start its own session. Local images require the original source path and image file to remain available. Closing a tab preserves the document library and session history. DSH extensions and runtime changes beyond the versions above are not exhaustively tested.

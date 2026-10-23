@@ -37,7 +37,7 @@ A focused Markdown reader with document-aware, native DSH conversations.
 
 | | 你能做什么 |
 | --- | --- |
-| 📖 **舒服地读** | 独立「MD 阅读」页面，双栏可调宽度，目录随阅读位置自动滚动；当前章节加粗，停下 1 秒后恢复。支持搜索、字号调节与深浅主题。 |
+| 📖 **舒服地读** | 独立「MD 阅读」页面，双栏可调宽度，目录平滑跟随阅读位置；当前章节加粗，柔和阴影与侧边指示随章节移动，停下 1 秒后渐隐。支持搜索、字号调节与深浅主题。 |
 | ✨ **选中就问** | 正文、代码或表格里的文字都可插入右侧原生引用，补充问题后发送。 |
 | 🧠 **结合全文** | 每次文档会话接入完整原文；超出模型窗口会报错，不用截断内容冒充全文。 |
 | 💬 **用你熟悉的 DSH** | 复用原生模型选择、聊天、流式回答、停止、工具及权限机制，无需另填 API Key。 |
@@ -50,11 +50,11 @@ A focused Markdown reader with document-aware, native DSH conversations.
 
 目前在 **Windows / DSH Desktop 0.2.1-rc.2 / claude-style 0.16.2** 上完成实测。
 
-1. 在 [Releases](https://github.com/tobyberry666/md-ai-reader/releases/latest) 下载 `dsh-md-reader-0.1.7.tgz`。
+1. 在 [Releases](https://github.com/tobyberry666/md-ai-reader/releases/latest) 下载对应版本的插件包；本地构建当前版本为 `dsh-md-reader-0.1.8.tgz`。
 2. 在下载目录打开 PowerShell，使用 DSH 自带的 CLI 安装：
 
    ```powershell
-   & "$env:LOCALAPPDATA\Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd" plugin --profile desktop add ".\dsh-md-reader-0.1.7.tgz"
+   & "$env:LOCALAPPDATA\Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd" plugin --profile desktop add ".\dsh-md-reader-0.1.8.tgz"
    ```
 
 3. 从托盘退出 DSH，再重新打开，点击左侧 **「MD 阅读」**。
@@ -94,6 +94,8 @@ A focused Markdown reader with document-aware, native DSH conversations.
 模型问答实测使用合成文档和 `deepseek-v4.1-flash-1017`。详细方法见 [验证与原生集成契约](docs/contracts.md)。
 
 0.1.7 新增目录位置跟随：使用长目录浏览器测试，验证上下自动定位、目录跳转、短末节、停止滚动 1 秒后取消指示，以及继续滚动重新计时。
+
+0.1.8 增加共享阴影浮层、侧边指示、悬停反馈和目录平滑滚动；停下后渐隐。系统启用「减少动态效果」时会关闭这些动效。新增真实浏览器检查过渡、浮层对齐、闲置重开不闪旧指示和减少动态效果模式。
 
 ### 当前范围
 

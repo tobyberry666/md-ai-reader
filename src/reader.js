@@ -14,6 +14,7 @@ export function Reader({ document: doc, onQuote, onPosition }) {
   const tocContainer = React.useRef(null);
   const [toc, setToc] = React.useState([]);
   const [activeHeading, setActiveHeading] = React.useState(null);
+  const [tocMarker, setTocMarker] = React.useState(null);
   const [showToc, setShowToc] = React.useState(true);
   const [selection, setSelection] = React.useState(null);
   const [query, setQuery] = React.useState('');
@@ -44,10 +45,12 @@ export function Reader({ document: doc, onQuote, onPosition }) {
     const nav = tocContainer.current;
     const item = nav?.querySelector('[aria-current="location"]');
     if (!item || !nav.clientHeight) return;
+    const top = item.offsetTop, height = item.offsetHeight;
+    setTocMarker(previous => previous?.top === top && previous?.height === height ? previous : { top, height });
     const frame = nav.getBoundingClientRect();
     const box = item.getBoundingClientRect();
-    if (box.top < frame.top) nav.scrollTop += box.top - frame.top;
-    else if (box.bottom > frame.bottom) nav.scrollTop += box.bottom - frame.bottom;
+    const delta = box.top < frame.top ? box.top - frame.top : box.bottom > frame.bottom ? box.bottom - frame.bottom : 0;
+    if (delta) nav.scrollTo({ top: nav.scrollTop + delta, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
   };
   React.useEffect(revealCurrentHeading, [activeHeading, showToc]);
 
@@ -108,7 +111,9 @@ export function Reader({ document: doc, onQuote, onPosition }) {
   h('div', { className: 'mdr-reading-layout' },
     showToc && h('nav', { ref: tocContainer, className: 'mdr-toc', 'aria-label': '文档目录' },
       h('div', { className: 'mdr-overline' }, '本页目录'),
-      toc.length ? toc.map(item => h('button', { key: item.index, 'aria-current': activeHeading === item.index ? 'location' : undefined, style: { paddingLeft: `${12 + Math.max(0, item.level - 1) * 12}px` }, onClick: () => item.element.scrollIntoView({ block: 'start', behavior: 'instant' }), title: item.text }, item.text)) : h('span', { className: 'mdr-muted' }, '暂无标题')),
+      h('div', { className: 'mdr-toc-items' },
+        tocMarker && h('div', { className: 'mdr-toc-marker', 'aria-hidden': true, 'data-visible': activeHeading !== null, style: { transform: `translateY(${tocMarker.top}px)`, height: `${tocMarker.height}px` } }),
+        toc.length ? toc.map(item => h('button', { key: item.index, 'aria-current': activeHeading === item.index ? 'location' : undefined, style: { paddingLeft: `${12 + Math.max(0, item.level - 1) * 12}px` }, onClick: () => item.element.scrollIntoView({ block: 'start', behavior: 'instant' }), title: item.text }, item.text)) : h('span', { className: 'mdr-muted' }, '暂无标题'))),
     h('div', { ref: scroller, className: 'mdr-page-scroll', onScroll: event => {
       position.current = event.currentTarget.scrollTop; setSelection(null);
       const viewport = event.currentTarget;
