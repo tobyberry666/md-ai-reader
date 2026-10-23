@@ -1,6 +1,6 @@
 {
   "name": "dsh-md-reader",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "md-ai-reader · 读到哪里，问到哪里。DSH Markdown 阅读与全文 AI 问答插件",
   "repository": {
     "type": "git",

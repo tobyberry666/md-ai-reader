@@ -7,6 +7,7 @@ const browser = await chromium.connectOverCDP(process.env.DSH_CDP || 'http://127
 try {
   const page = browser.contexts().flatMap(context => context.pages()).find(p => p.url().startsWith('dsh-app://app/'));
   assert.ok(await page.locator('body[data-dsh-claude-style]').count(), 'claude-style must be enabled');
+  assert.equal(await page.locator('.mdr-native .dsh-side-chat-trigger').isVisible(), false, 'MD reader must not expose the unrelated side-chat trigger');
   const geometry = await page.locator('.mdr-native [data-conversation-scroll]').evaluate(element => ({ width: element.clientWidth, scrollWidth: element.scrollWidth }));
   assert.ok(geometry.scrollWidth <= geometry.width + 2, `native composer overflows: ${JSON.stringify(geometry)}`);
   const chat = await page.locator('.mdr-chat').boundingBox();

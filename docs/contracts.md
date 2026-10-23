@@ -40,6 +40,10 @@ Body scrolling marks the current heading with `aria-current="location"` and chan
 
 A single decorative marker sits behind the TOC buttons and animates its transform/height between active headings. The marker adds a soft shadow and an accent edge, fades in/out through CSS, and cannot intercept pointer input. The TOC reveals headings with native smooth scrolling; reduced-motion uses instant scrolling and disables transitions. Existing heading detection, the 1000ms idle delay, document position and native AI session bindings are preserved. Browser checks also verify marker alignment, transform transitions, idle reopening without a flash, and reduced-motion behavior.
 
+## 0.1.9: reader-only side-chat control
+
+The reader's `.mdr-native` area hides only `dsh-side-chat`'s stable `.dsh-side-chat-trigger` control. The standalone side-chat plugin and its normal conversation entry remain registered and unchanged. Browser checks verify the CSS does not hide the same control outside the reading conversation. Switching between the installed reader and the normal DSH conversation also confirms the control is hidden in the reader and visible in the normal conversation.
+
 ## Limits
 
 UTF-8 `.md`/`.markdown`, maximum 2 MiB per file. Imported documents are immutable snapshots; reimport changed content to start its own session. Local images require the original source path and image file to remain available. Closing a tab preserves the document library and session history. DSH extensions and runtime changes beyond the versions above are not exhaustively tested.

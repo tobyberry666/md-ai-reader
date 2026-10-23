@@ -50,11 +50,11 @@ A focused Markdown reader with document-aware, native DSH conversations.
 
 目前在 **Windows / DSH Desktop 0.2.1-rc.2 / claude-style 0.16.2** 上完成实测。
 
-1. 在 [Releases](https://github.com/tobyberry666/md-ai-reader/releases/latest) 下载对应版本的插件包；本地构建当前版本为 `dsh-md-reader-0.1.8.tgz`。
+1. 在 [Releases](https://github.com/tobyberry666/md-ai-reader/releases/latest) 下载 `dsh-md-reader-0.1.9.tgz`。
 2. 在下载目录打开 PowerShell，使用 DSH 自带的 CLI 安装：
 
    ```powershell
-   & "$env:LOCALAPPDATA\Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd" plugin --profile desktop add ".\dsh-md-reader-0.1.8.tgz"
+   & "$env:LOCALAPPDATA\Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd" plugin --profile desktop add ".\dsh-md-reader-0.1.9.tgz"
    ```
 
 3. 从托盘退出 DSH，再重新打开，点击左侧 **「MD 阅读」**。
@@ -96,6 +96,8 @@ A focused Markdown reader with document-aware, native DSH conversations.
 0.1.7 新增目录位置跟随：使用长目录浏览器测试，验证上下自动定位、目录跳转、短末节、停止滚动 1 秒后取消指示，以及继续滚动重新计时。
 
 0.1.8 增加共享阴影浮层、侧边指示、悬停反馈和目录平滑滚动；停下后渐隐。系统启用「减少动态效果」时会关闭这些动效。新增真实浏览器检查过渡、浮层对齐、闲置重开不闪旧指示和减少动态效果模式。
+
+0.1.9 在 MD 阅读的专属聊天区隐藏「侧边提问」入口，普通 DSH 对话中的该插件入口保持可用。
 
 ### 当前范围
 

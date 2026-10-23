@@ -141,5 +141,9 @@ try {
   await page.waitForTimeout(1100);
   assert.ok(await page.evaluate(() => saved.length > 0));
   assert.deepEqual(errors, []);
+  await page.setContent('<div class="mdr-native"><button id="reader-side-chat" class="dsh-side-chat-trigger">侧边提问</button></div><button id="regular-side-chat" class="dsh-side-chat-trigger">侧边提问</button>');
+  await page.addStyleTag({ content: await readFile(new URL('../src/styles.css', import.meta.url), 'utf8') });
+  assert.equal(await page.locator('#reader-side-chat').isVisible(), false, 'hide side-chat entry only inside the MD conversation');
+  assert.equal(await page.locator('#regular-side-chat').isVisible(), true, 'preserve the regular DSH side-chat entry');
   console.log('PASS: Reader scroll follows forward/backward, reveals TOC, handles short final section, resets 1s idle indication, navigates, toggles and unmounts.');
 } finally { await browser.close(); }
